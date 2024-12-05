@@ -1,0 +1,6 @@
+# local environment variables
+.env
+
+# build output
+obj/
+bin/
