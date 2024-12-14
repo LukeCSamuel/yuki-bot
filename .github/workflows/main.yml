@@ -21,8 +21,9 @@ jobs:
       - name: Build and deploy Container App
         uses: azure/container-apps-deploy-action@v1
         with:
-          appSourcePath: ${{ github.workspace }}
+          appSourcePath: ${{ github.workspace }}/YukiBot
           acrName: caswell
-          containerAppName: yuki-bot
           resourceGroup: Personal
-      
+          imageToBuild: caswell.azurecr.io/personal/yukibot:${{ github.run_id }}.${{ github.run_attempt }}
+          containerAppName: yuki-bot
+          environmentVariables: COSMOS_CONNECTION_STRING=${{ secrets.COSMOS_CONNECTION_STRING }} DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
