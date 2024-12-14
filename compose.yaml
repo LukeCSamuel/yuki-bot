@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: yukibot-app
+    depends_on:
+      cosmosdb:
+        condition: service_healthy
+    environment:
+      APP_ENVIRONMENT: development
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:?error}
+      COSMOS_CONNECTION_STRING: ${COSMOS_CONNECTION_STRING:-AccountEndpoint=https://cosmosdb:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;}
+      COSMOS_DATABASE_NAME: ${COSMOS_DATABASE_NAME:-yuki-bot}
+      COSMOS_CONTAINER_NAME: ${COSMOS_CONTAINER_NAME:-yuki-bot}
+    network_mode: service:cosmosdb
+    volumes:
+      - .:/src
+
+  cosmosdb:
+    container_name: yukibot-cosmosdb
+    environment:
+      AZURE_COSMOS_EMULATOR_PARTITION_COUNT: 10
+      AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE: true
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    tty: true
+    restart: unless-stopped
+    mem_limit: 2G
+    cpu_count: 2
+    healthcheck:
+      test: curl -f -k https://cosmosdb:8081/_explorer/emulator.pem || exit 1
+      start_period: 120s
+      interval: 10s
+      timeout: 1s
+      retries: 5
