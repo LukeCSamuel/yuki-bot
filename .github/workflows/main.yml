@@ -1,0 +1,22 @@
+name: Main
+run-name: Deploy yuki-bot started by ${{ github.actor }}
+on: [push]
+jobs:
+  Deploy-Yuki-Bot:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying ${{ github.ref }} from ${{ github.repository }}."
+      - name: Check out
+        uses: actions/checkout@v4
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Build and deploy Container App
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}
+          acrName: caswell
+          containerAppName: yuki-bot
+          resourceGroup: Personal
+      
