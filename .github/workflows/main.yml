@@ -2,29 +2,40 @@ name: Main
 on:
   push:
     branches: [main]
+    paths:
+      - '**'
+      - '.github/workflows/main.yml'
 
-permissions:
-  id-token: write
-  contents: read
+  # Allow manual trigger 
+  workflow_dispatch:
+
 jobs:
-  Deploy-Yuki-Bot:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - name: Check out
+      - name: Checkout
         uses: actions/checkout@v4
+
       - name: Azure login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.YUKIBOT_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.YUKIBOT_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.YUKIBOT_AZURE_SUBSCRIPTION_ID }}
+
       - name: Build and deploy Container App
         uses: azure/container-apps-deploy-action@v1
         with:
           appSourcePath: ${{ github.workspace }}/YukiBot
-          acrName: caswell
+          registryUrl: caswell.azurecr.io
+          registryUsername: ${{ secrets.YUKIBOT_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.YUKIBOT_REGISTRY_PASSWORD }}
           resourceGroup: Personal
           location: eastus2
-          imageToBuild: caswell.azurecr.io/personal/yukibot:${{ github.run_id }}.${{ github.run_attempt }}
+          imageToBuild: caswell.azurecr.io/personal/yukibot:${{ github.sha }}
           containerAppName: yuki-bot
           environmentVariables: COSMOS_CONNECTION_STRING=${{ secrets.COSMOS_CONNECTION_STRING }} DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}

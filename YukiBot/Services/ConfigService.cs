@@ -28,7 +28,7 @@ namespace YukiBot.Services
 				?? throw new Exception("A Discord Bot token should be provided in the 'DISCORD_BOT_TOKEN' environment variable.");
 
 			CosmosDatabaseName = Environment.GetEnvironmentVariable("COSMOS_DATABASE_NAME")
-				?? "yuki-bot";
+				?? "caswell";
 			CosmosContainerName = Environment.GetEnvironmentVariable("COSMOS_CONTAINER_NAME")
 				?? "yuki-bot";
 		}
