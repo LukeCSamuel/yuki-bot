@@ -24,6 +24,7 @@ jobs:
           appSourcePath: ${{ github.workspace }}/YukiBot
           acrName: caswell
           resourceGroup: Personal
+          location: East US 2
           imageToBuild: caswell.azurecr.io/personal/yukibot:${{ github.run_id }}.${{ github.run_attempt }}
           containerAppName: yuki-bot
           environmentVariables: COSMOS_CONNECTION_STRING=${{ secrets.COSMOS_CONNECTION_STRING }} DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
