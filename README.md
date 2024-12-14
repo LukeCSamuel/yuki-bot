@@ -2,6 +2,11 @@
 
 ## Development Setup
 
+The following commands should be ran from inside the project directory:
+```bash
+cd YukiBot
+```
+
 Create a local environment configuration:
 ```bash
 cp .env.example .env
