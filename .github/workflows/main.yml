@@ -38,4 +38,4 @@ jobs:
           location: eastus2
           imageToBuild: caswell.azurecr.io/personal/yukibot:${{ github.sha }}
           containerAppName: yuki-bot
-          environmentVariables: 'COSMOS_CONNECTION_STRING=${{ secrets.COSMOS_CONNECTION_STRING }} DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}'
+          environmentVariables: COSMOS_CONNECTION_STRING=secretref:cosmos-connection-string DISCORD_BOT_TOKEN=secretref:discord-bot-token
