@@ -10,7 +10,6 @@ jobs:
   Deploy-Yuki-Bot:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Deploying ${{ github.ref }} from ${{ github.repository }}."
       - name: Check out
         uses: actions/checkout@v4
       - name: Azure login
