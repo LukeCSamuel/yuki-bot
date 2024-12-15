@@ -11,21 +11,18 @@ namespace YukiBot.Jobs
 {
 	internal class TheaterEventJob : IJob
 	{
-		// TODO: a better way to manage what channel to post to for a job
-		//       maybe DB powered?
-		const ulong channelId = 579436919964958725ul;
-		//const ulong channelId = 1235114114628587601ul;
-
 		public TimeSpan Interval => TimeSpan.FromDays(1);
 		public Task? Scheduled { get; set; }
 
 		readonly TheaterEventService eventService;
 		readonly IDiscordClient discord;
+		readonly ulong channelId;
 
-		public TheaterEventJob (TheaterEventService eventService, IDiscordClient discord)
+		public TheaterEventJob (TheaterEventService eventService, IDiscordClient discord, ConfigService configService)
 		{
 			this.eventService = eventService;
 			this.discord = discord;
+			channelId = configService.AppSettings.TheaterChannelId;
 		}
 
 		public async Task OnJobTriggered ()

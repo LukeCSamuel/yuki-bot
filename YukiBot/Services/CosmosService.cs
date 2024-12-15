@@ -19,8 +19,8 @@ namespace YukiBot.Services
 
 		public CosmosService (ConfigService config)
 		{
-			DatabaseName = config.CosmosDatabaseName;
-			ContainerName = config.CosmosContainerName;
+			DatabaseName = config.AppSettings.CosmosDatabaseName;
+			ContainerName = config.AppSettings.CosmosContainerName;
 
 			CosmosClientOptions? options = null;
 			if (config.AppEnvironment is AppEnvironment.Development)

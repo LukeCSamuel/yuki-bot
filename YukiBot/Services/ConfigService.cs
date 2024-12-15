@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using YukiBot.Client;
 
@@ -12,9 +14,8 @@ namespace YukiBot.Services
 	{
 		public AppEnvironment AppEnvironment { get; }
 		public string CosmosConnectionString { get; }
-		public string CosmosDatabaseName { get; }
-		public string CosmosContainerName { get; }
 		public string DiscordBotToken { get; }
+		public AppSettings AppSettings { get; }
 
 		public IClientToken Token => new ClientToken { Config = this };
 		
@@ -27,17 +28,28 @@ namespace YukiBot.Services
 			DiscordBotToken = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN")
 				?? throw new Exception("A Discord Bot token should be provided in the 'DISCORD_BOT_TOKEN' environment variable.");
 
-			CosmosDatabaseName = Environment.GetEnvironmentVariable("COSMOS_DATABASE_NAME")
-				?? "caswell";
-			CosmosContainerName = Environment.GetEnvironmentVariable("COSMOS_CONTAINER_NAME")
-				?? "yuki-bot";
+			var settingsFile = AppEnvironment is AppEnvironment.Development ? "appSettings.development.json" : "appSettings.json";
+			AppSettings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(settingsFile)) 
+				?? new AppSettings() {
+					CosmosDatabaseName = "caswell",
+					CosmosContainerName = "yuki-bot",
+				};
 		}
 
-		private class ClientToken : IClientToken
+		class ClientToken : IClientToken
 		{
 			public required ConfigService Config { get; set; }
 			public string Value => Config.DiscordBotToken;
 		}
+	}
+
+	public class AppSettings
+	{
+		public required string CosmosDatabaseName { get; set; }
+		public required string CosmosContainerName { get; set; }
+		// TODO: a better way to manage what channel to post to for a job
+		//       maybe DB powered?
+		public ulong TheaterChannelId { get; set; }
 	}
 
 	internal enum AppEnvironment

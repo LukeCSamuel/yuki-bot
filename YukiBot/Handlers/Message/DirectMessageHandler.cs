@@ -22,16 +22,7 @@ namespace YukiBot.Handlers.Message
 		{
 			if (msg.Channel.GetChannelType() == ChannelType.DM)
 			{
-				Console.WriteLine("Received DM");
-				await eventService.UpdateShowData();
-				var shows = await eventService.GetAllAsync();
-				Console.WriteLine($"Found {shows.Count()} shows");
-				foreach (var show in shows)
-				{
-					var embed = show.GetEmbed();
-					await msg.Channel.SendMessageAsync("Woof!", embed: embed.Build());
-				}
-				//await msg.Channel.SendMessageAsync("Woof!");
+				await msg.Channel.SendMessageAsync("Woof!");
 			}
 		}
 	}

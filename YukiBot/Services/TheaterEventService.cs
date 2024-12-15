@@ -77,6 +77,12 @@ namespace YukiBot.Services
 			var document = await web.LoadFromWebAsync(kyartsDomain + page);
 			var eventNodes = document.DocumentNode.SelectNodes(@"//div[contains(@class, 'card-featured')]");
 
+			if (eventNodes is null)
+			{
+				Console.WriteLine("Failed to select event nodes.");
+				return;
+			}
+
 			var existingEvents = await cosmos.GetAllAsync<TheaterEvent>();
 			var interestingShows = await GetInterestingShowsAsync();
 			var discoveredEvents = eventNodes.ToAsyncEnumerable().Select(ExtractTheaterEventFromNode);
